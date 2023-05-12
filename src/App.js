@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { nanoid } from "nanoid";
 import data from "./mock-data.json";
+import ReadOnlyRow from "./Components/ReadyOnlyRow";
+import EditableRow from "./Components/EditableRow";
 
 function App() {
   const [contacts, setContacts] = useState(data);
@@ -12,6 +14,7 @@ function App() {
     phoneNumber: "",
     email: "",
   });
+  const [editContactId, setEditContactId] = useState(null);
 
   const onChangeAddContactHandler = (event) => {
     event.preventDefault();
@@ -19,7 +22,7 @@ function App() {
     const fileName = event.target.getAttribute("name");
     const fileValue = event.target.value;
 
-    const newFormData = {...addFormData};
+    const newFormData = { ...addFormData };
     newFormData[fileName] = fileValue;
 
     setAddFormData(newFormData);
@@ -36,9 +39,15 @@ function App() {
       email: addFormData.email,
     };
 
-    const newContacts = [...contacts, newContact]
+    const newContacts = [...contacts, newContact];
 
     setContacts(newContacts);
+  };
+
+  const handleEditClick = (event, contactId) => {
+    event.preventDefault();
+
+    setEditContactId(contactId);
   };
 
   return (
@@ -46,26 +55,33 @@ function App() {
       <div className="row text-center py-2 m-0 bg-info">
         <h3 className="m-0">Table</h3>
       </div>
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Address</th>
-            <th scope="col">Phone Number</th>
-            <th scope="col">Email</th>
-          </tr>
-        </thead>
-        <tbody>
-          {contacts.map((contact) => (
+      <form>
+        <table className="table table-striped">
+          <thead>
             <tr>
-              <td scope="row">{contact.fullName}</td>
-              <td>{contact.address}</td>
-              <td>{contact.phoneNumber}</td>
-              <td>{contact.email}</td>
+              <th scope="col">Name</th>
+              <th scope="col">Address</th>
+              <th scope="col">Phone Number</th>
+              <th scope="col">Email</th>
+              <th scope="col">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {contacts.map((contact) => (
+              <Fragment>
+                {editContactId === contact.id ? (
+                  <EditableRow />
+                ) : (
+                  <ReadOnlyRow
+                    contact={contact}
+                    handleEditClick={handleEditClick}
+                  />
+                )}
+              </Fragment>
+            ))}
+          </tbody>
+        </table>
+      </form>
       <h4 className="bg-light p-2">Add a Contact</h4>
       <form onSubmit={handleAddFormSubmit}>
         <div class="row">

@@ -48,7 +48,8 @@ const EditableRow = (props) => {
             />
         </td>
         <td>
-            <button type="submit" className="btn btn-primary" onClick={props.handleEditContactSubmit}>Save</button>
+            <button type="submit" className="btn btn-primary me-1" onClick={props.handleEditContactSubmit}>Save</button>
+            <button className="btn btn-danger" onClick={props.handleCancelClick}>Cancel</button>
         </td>
       </tr>
     )

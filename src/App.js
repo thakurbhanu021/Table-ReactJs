@@ -62,7 +62,7 @@ function App() {
     setContacts(newContacts);
   };
 
-  const handleEditContactSubmit = (event)=>{
+  const handleEditContactSubmit = (event) => {
     event.preventDefault();
 
     const editedContact = {
@@ -71,17 +71,15 @@ function App() {
       address: editFormData.address,
       phoneNumber: editFormData.phoneNumber,
       email: editFormData.email,
-    }
+    };
 
     const newContacts = [...contacts];
-
-    const index = contacts.findIndex((contact)=> contact.id === editContactId)
-
+    const index = contacts.findIndex((contact) => contact.id === editContactId);
     newContacts[index] = editedContact;
 
     setContacts(newContacts);
     setEditContactId(null);
-  }
+  };
 
   const handleEditClick = (event, contact) => {
     event.preventDefault();
@@ -95,6 +93,18 @@ function App() {
       email: contact.email,
     };
     setEditFormData(formValues);
+  };
+
+  const handleCancelClick = () => {
+    setEditContactId(null);
+  };
+
+  const handleDeleteClick = (contactid) => {
+    const newContacts = [...contacts];
+    const index = newContacts.findIndex((contact) => contact.id === contactid);
+    newContacts.splice(index, 1);
+
+    setContacts(newContacts);
   };
 
   return (
@@ -118,13 +128,15 @@ function App() {
               <Fragment>
                 {editContactId === contact.id ? (
                   <EditableRow
-                  handleEditContactSubmit= {handleEditContactSubmit}
+                    handleCancelClick={handleCancelClick}
+                    handleEditContactSubmit={handleEditContactSubmit}
                     editFormData={editFormData}
                     onChangeEditContactHandler={onChangeEditContactHandler}
                   />
                 ) : (
                   <ReadOnlyRow
                     contact={contact}
+                    handleDeleteClick={handleDeleteClick}
                     handleEditClick={handleEditClick}
                   />
                 )}
@@ -135,8 +147,8 @@ function App() {
       </form>
       <h4 className="bg-light p-2">Add a Contact</h4>
       <form onSubmit={handleAddFormSubmit}>
-        <div class="row">
-          <div class="col">
+        <div className="row">
+          <div className="col">
             <input
               type="text"
               className="form-control"
@@ -146,7 +158,7 @@ function App() {
               onChange={onChangeAddContactHandler}
             />
           </div>
-          <div class="col">
+          <div className="col">
             <input
               type="text"
               className="form-control"
@@ -156,7 +168,7 @@ function App() {
               onChange={onChangeAddContactHandler}
             />
           </div>
-          <div class="col">
+          <div className="col">
             <input
               type="text"
               className="form-control"
@@ -166,7 +178,7 @@ function App() {
               onChange={onChangeAddContactHandler}
             />
           </div>
-          <div class="col">
+          <div className="col">
             <input
               type="text"
               className="form-control"

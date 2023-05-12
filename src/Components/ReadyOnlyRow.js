@@ -8,7 +8,8 @@ const ReadOnlyRow = (props) => {
       <td>{props.contact.phoneNumber}</td>
       <td>{props.contact.email}</td>
       <td>
-        <button onClick={(e)=>props.handleEditClick(e, props.contact)} className="btn btn-primary">Edit</button>
+        <button type='button' onClick={(e)=>props.handleEditClick(e, props.contact)} className="btn btn-primary me-1">Edit</button>
+        <button type='button' onClick={()=>props.handleDeleteClick(props.contact.id)} className="btn btn-danger">Delete</button>
       </td>
     </tr>
   );

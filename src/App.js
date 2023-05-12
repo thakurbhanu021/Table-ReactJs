@@ -14,6 +14,12 @@ function App() {
     phoneNumber: "",
     email: "",
   });
+  const [editFormData, setEditFormData] = useState({
+    fullName: "",
+    address: "",
+    phoneNumber: "",
+    email: "",
+  });
   const [editContactId, setEditContactId] = useState(null);
 
   const onChangeAddContactHandler = (event) => {
@@ -26,6 +32,18 @@ function App() {
     newFormData[fileName] = fileValue;
 
     setAddFormData(newFormData);
+  };
+
+  const onChangeEditContactHandler = (event) => {
+    event.preventDefault();
+
+    const fileName = event.target.getAttribute("name");
+    const fileValue = event.target.value;
+
+    const newFormData = { ...editFormData };
+    newFormData[fileName] = fileValue;
+
+    setEditFormData(newFormData);
   };
 
   const handleAddFormSubmit = (event) => {
@@ -44,10 +62,39 @@ function App() {
     setContacts(newContacts);
   };
 
-  const handleEditClick = (event, contactId) => {
+  const handleEditContactSubmit = (event)=>{
     event.preventDefault();
 
-    setEditContactId(contactId);
+    const editedContact = {
+      id: editContactId,
+      fullName: editFormData.fullName,
+      address: editFormData.address,
+      phoneNumber: editFormData.phoneNumber,
+      email: editFormData.email,
+    }
+
+    const newContacts = [...contacts];
+
+    const index = contacts.findIndex((contact)=> contact.id === editContactId)
+
+    newContacts[index] = editedContact;
+
+    setContacts(newContacts);
+    setEditContactId(null);
+  }
+
+  const handleEditClick = (event, contact) => {
+    event.preventDefault();
+
+    setEditContactId(contact.id);
+
+    const formValues = {
+      fullName: contact.fullName,
+      address: contact.address,
+      phoneNumber: contact.phoneNumber,
+      email: contact.email,
+    };
+    setEditFormData(formValues);
   };
 
   return (
@@ -70,7 +117,11 @@ function App() {
             {contacts.map((contact) => (
               <Fragment>
                 {editContactId === contact.id ? (
-                  <EditableRow />
+                  <EditableRow
+                  handleEditContactSubmit= {handleEditContactSubmit}
+                    editFormData={editFormData}
+                    onChangeEditContactHandler={onChangeEditContactHandler}
+                  />
                 ) : (
                   <ReadOnlyRow
                     contact={contact}
@@ -107,7 +158,7 @@ function App() {
           </div>
           <div class="col">
             <input
-              type="number"
+              type="text"
               className="form-control"
               required="required"
               placeholder="Enter a phone number..."
